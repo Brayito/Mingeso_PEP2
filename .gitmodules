@@ -1,3 +1,6 @@
 [submodule "ms-vehicle"]
 	path = ms-vehicle
 	url = https://github.com/Brayito/ms-vehicle
+[submodule "ms-repair_list"]
+	path = ms-repair_list
+	url = https://github.com/Brayito/ms-repair_list
