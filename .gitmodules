@@ -7,3 +7,6 @@
 [submodule "ms-reports"]
 	path = ms-reports
 	url = https://github.com/Brayito/ms-reports
+[submodule "ms-vehicle_repair"]
+	path = ms-vehicle_repair
+	url = https://github.com/Brayito/ms-vehicle_repair
