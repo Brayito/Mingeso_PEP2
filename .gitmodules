@@ -10,3 +10,6 @@
 [submodule "ms-vehicle_repair"]
 	path = ms-vehicle_repair
 	url = https://github.com/Brayito/ms-vehicle_repair
+[submodule "eureka-server"]
+	path = eureka-server
+	url = https://github.com/Brayito/eureka-server
