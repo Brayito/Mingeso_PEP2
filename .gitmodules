@@ -13,3 +13,6 @@
 [submodule "eureka-server"]
 	path = eureka-server
 	url = https://github.com/Brayito/eureka-server
+[submodule "config-server"]
+	path = config-server
+	url = https://github.com/Brayito/config-server
