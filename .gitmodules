@@ -4,3 +4,6 @@
 [submodule "ms-repair_list"]
 	path = ms-repair_list
 	url = https://github.com/Brayito/ms-repair_list
+[submodule "ms-reports"]
+	path = ms-reports
+	url = https://github.com/Brayito/ms-reports
