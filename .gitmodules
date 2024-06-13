@@ -1,0 +1,3 @@
+[submodule "ms_vehicle"]
+	path = ms_vehicle
+	url = https://github.com/Brayito/ms_vehicle
