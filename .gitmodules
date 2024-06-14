@@ -19,3 +19,6 @@
 [submodule "gateway-server"]
 	path = gateway-server
 	url = https://github.com/Brayito/gateway-server
+[submodule "config-data"]
+	path = config-data
+	url = https://github.com/Brayito/config-data
