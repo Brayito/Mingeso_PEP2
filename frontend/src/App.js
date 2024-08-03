@@ -5,6 +5,8 @@ import React from "react";
 import VehicleComponent from "./components/VehicleComponent";
 import HomeComponent from "./components/HomeComponent";
 import NewVehicleComponent from "./components/NewVehicleComponent";
+import RepairComponent from "./components/RepairComponent";
+import NewRepairComponent from "./components/NewRepairComponent";
 
 function App() {
   return (
@@ -12,8 +14,10 @@ function App() {
       <BrowserRouter>
         <Routes>
             <Route path="/" element={<HomeComponent />} />
-            <Route path="/listar" element={<VehicleComponent/>}/>
-            <Route path="/nuevo_vehiculo" element={<NewVehicleComponent/>}/>
+            <Route path="/listar-vehiculos" element={<VehicleComponent/>}/>
+            <Route path="/nuevo-vehiculo" element={<NewVehicleComponent/>}/>
+            <Route path="/listar-reparaciones" element={<RepairComponent/>}/>
+            <Route path="/nueva-reparacion" element={<NewRepairComponent/>}/>
         </Routes>
       </BrowserRouter>
     </div>

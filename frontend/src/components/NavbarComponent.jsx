@@ -9,7 +9,7 @@ function NavbarComponent() {
                     <div className="logo">
                         <h1 align="center" style={{ color: "white" }}>
                             {" "}
-                            <b1>Autofix</b1>
+                            Autofix
                         </h1>
                     </div>
                 </header>

@@ -12,7 +12,6 @@ function NavbarComponent() {
                     <nav>
                     </nav>
                     <a class="btn" href="/"><button>Volver al menú principal</button></a>
-                    <a class="btn-2" href="/listar-vehiculos"><button>Volver al listado de Vehiculos</button></a>
                 </header>
             </NavStyle>
         </>
@@ -22,6 +21,7 @@ function NavbarComponent() {
 export default NavbarComponent;
 
 const NavStyle = styled.nav`
+
 header{
     background-color: black;
 }

@@ -12,7 +12,7 @@ function NavbarComponent() {
                     <nav>
                     </nav>
                     <a class="btn" href="/"><button>Volver al menú principal</button></a>
-                    <a class="btn-2" href="/listar-vehiculos"><button>Volver al listado de Vehiculos</button></a>
+                    <a class="btn-2" href="/listar-reparaciones"><button>Volver al listado de Reparaciones</button></a>
                 </header>
             </NavStyle>
         </>

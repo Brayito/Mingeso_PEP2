@@ -7,87 +7,89 @@ import Button from 'react-bootstrap/Button';
 import swal from 'sweetalert';
 import { createGlobalStyle } from 'styled-components'
 
-
-export default function NuevoProveedorComponent(props) {
+export default function NewVehicleComponent(props) {
 
     const initialState = {
+        patente: "",
         marca: "",
         modelo: "",
         tipo_vehiculo: "",
-        ano_fabricacion: 0,
+        ano_fabricacion: "",
         tipo_motor: "",
-        num_asientos: 0,
-        kilometraje: 0
+        num_asientos: "",
+        kilometraje: ""
     };
 
     const [input, setInput] = useState(initialState);
+    const [errors, setErrors] = useState({});
 
-    const changePatenteHandler = event => {
-        setInput({ ...input, patente: event.target.value });
-        console.log(input.patente);
+    // Función para validar los campos del formulario
+    const validate = () => {
+        const newErrors = {};
+        if (!input.patente) newErrors.patente = "La patente es obligatoria.";
+        if (!input.marca) newErrors.marca = "La marca es obligatoria.";
+        if (!input.modelo) newErrors.modelo = "El modelo es obligatorio.";
+        if (!input.tipo_vehiculo) newErrors.tipo_vehiculo = "El tipo de vehículo es obligatorio.";
+        if (!input.ano_fabricacion) newErrors.ano_fabricacion = "El año de fabricación es obligatorio.";
+        if (!input.tipo_motor) newErrors.tipo_motor = "El tipo de motor es obligatorio.";
+        if (!input.num_asientos) newErrors.num_asientos = "El número de asientos es obligatorio.";
+        if (!input.kilometraje) newErrors.kilometraje = "El kilometraje es obligatorio.";
+
+        setErrors(newErrors);
+        // Solo devolvemos true si no hay errores
+        return Object.keys(newErrors).length === 0;
     };
-    const changeMarcaHandler = event => {
-        setInput({ ...input, marca: event.target.value });
-        console.log(input.marca);
-    };
-    const changeModeloHandler = event => {
-        setInput({ ...input, modelo: event.target.value });
-        console.log(input.modelo);
-    };
-    const changeTipoVehiculoHandler = event => {
-        setInput({ ...input, tipo_vehiculo: event.target.value });
-        console.log(input.tipo_vehiculo);
-    };
-    const changeAnoFabricacionHandler = event => {
-        setInput({ ...input, ano_fabricacion: event.target.value });
-        console.log(input.ano_fabricacion);
-    };
-    const changeTipoMotorHandler = event => {
-        setInput({ ...input, tipo_motor: event.target.value });
-        console.log(input.tipo_motor);
-    };
-    const changeNumAsientosHandler = event => {
-        setInput({ ...input, num_asientos: event.target.value });
-        console.log(input.num_asientos);
-    };
-    const changeKilometrajeHandler = event => {
-        setInput({ ...input, kilometraje: event.target.value });
-        console.log(input.kilometraje);
+
+    // Manejadores de cambio para cada campo
+    const changeHandler = (event) => {
+        const { name, value } = event.target;
+        setInput({ ...input, [name]: value });
     };
 
     const ingresarVehiculo = e => {
         e.preventDefault();
+
+        if (!validate()) {
+            swal({
+                text: "Por favor, completa todos los campos obligatorios.",
+                icon: "warning"
+            });
+            return;
+        }
+
         swal({
             title: "¿Está seguro de que desea ingresar al vehiculo?",
             text: "Una vez ingresado, no podrá ser modificado.",
             icon: "warning",
             buttons: ["Cancelar", "Enviar"],
             dangerMode: true
-        }).then(respuesta=>{
-            if(respuesta){
-                swal("Vehiculo ingresado correctamente!", {icon: "success", timer: "3000"});
-                let vehiculo = { patente: input.patente, marca: input.marca, modelo: input.modelo, tipo_vehiculo: input.tipo_vehiculo, ano_fabricacion: input.ano_fabricacion, tipo_motor: input.tipo_motor, num_asientos: input.num_asientos, kilometraje: input.kilometraje};
-                console.log(input.patente)
-                console.log(input.marca)
-                console.log(input.modelo)
-                console.log(input.tipo_vehiculo)
-                console.log(input.ano_fabricacion)
-                console.log(input.tipo_motor)
-                console.log(input.num_asientos)
-                console.log(input.kilometraje)
-                console.log("vehiculo => " + JSON.stringify(vehiculo));
-                VehicleService.ingresarVehiculo(vehiculo).then(
-                    (res) => {
-                    }
-                );
-            }
-            else{
-                swal({text: "Vehiculo no ingresado.", icon: "error"});
+        }).then(respuesta => {
+            if (respuesta) {
+                swal("Vehiculo ingresado correctamente!", { icon: "success", timer: "3000" });
+                let vehiculo = {
+                    patente: input.patente,
+                    marca: input.marca,
+                    modelo: input.modelo,
+                    tipo_vehiculo: input.tipo_vehiculo,
+                    ano_fabricacion: input.ano_fabricacion,
+                    tipo_motor: input.tipo_motor,
+                    num_asientos: input.num_asientos,
+                    kilometraje: input.kilometraje
+                };
+
+                VehicleService.ingresarVehiculo(vehiculo).then((res) => {
+                    setInput(initialState);
+                }).catch(error => {
+                    swal({
+                        text: "Hubo un error al ingresar el vehículo.",
+                        icon: "error"
+                    });
+                });
+            } else {
+                swal({ text: "Vehiculo no ingresado.", icon: "error" });
             }
         });
     };
-
-
 
     return (
         <div>
@@ -99,88 +101,155 @@ export default function NuevoProveedorComponent(props) {
                         <h1>Registrar nuevo vehiculo</h1>
                         <div className="formcontainer" align="center">
                             <hr />
-                            <div className=" container">
+                            <div className="container">
                                 <Form>
-                                    <Form.Group controlId="patente" value={input.patente} onChange={changePatenteHandler}>
+                                    <Form.Group controlId="patente">
                                         <Form.Label>
                                             <strong>Patente</strong>
                                         </Form.Label>
                                         <Form.Control
-                                            type="patente"
+                                            type="text"
                                             placeholder="Ingrese la patente del vehiculo"
+                                            name="patente"
+                                            value={input.patente}
+                                            onChange={changeHandler}
+                                            isInvalid={!!errors.patente}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.patente}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group controlId="marca" value={input.marca} onChange={changeMarcaHandler}>
+                                    <Form.Group controlId="marca">
                                         <Form.Label>
                                             <strong>Marca</strong>
                                         </Form.Label>
                                         <Form.Control
-                                            type="marca"
+                                            type="text"
                                             placeholder="Ingrese la marca del vehiculo"
+                                            name="marca"
+                                            value={input.marca}
+                                            onChange={changeHandler}
+                                            isInvalid={!!errors.marca}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.marca}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group controlId="modelo" value={input.modelo} onChange={changeModeloHandler}>
+                                    <Form.Group controlId="modelo">
                                         <Form.Label>
                                             <strong>Modelo</strong>
                                         </Form.Label>
                                         <Form.Control
-                                            type="modelo"
+                                            type="text"
                                             placeholder="Ingrese el modelo del vehiculo"
+                                            name="modelo"
+                                            value={input.modelo}
+                                            onChange={changeHandler}
+                                            isInvalid={!!errors.modelo}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.modelo}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group controlId="tipo_vehiculo" value={input.tipo_vehiculo} onChange={changeTipoVehiculoHandler}>
+                                    <Form.Group controlId="tipo_vehiculo">
                                         <Form.Label>
                                             <strong>Tipo Vehículo</strong>
                                         </Form.Label>
-                                        <Form.Control as="select" name="tipo_vehiculo">
+                                        <Form.Control
+                                            as="select"
+                                            name="tipo_vehiculo"
+                                            value={input.tipo_vehiculo}
+                                            onChange={changeHandler}
+                                            isInvalid={!!errors.tipo_vehiculo}
+                                        >
+                                            <option value="">Seleccione el tipo de vehículo</option>
                                             <option value="Sedan">Sedan</option>
                                             <option value="Hatchback">Hatchback</option>
                                             <option value="SUV">SUV</option>
                                             <option value="Pickup">Pickup</option>
                                             <option value="Furgoneta">Furgoneta</option>
                                         </Form.Control>
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.tipo_vehiculo}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group controlId="ano_fabricacion" value={input.ano_fabricacion} onChange={changeAnoFabricacionHandler}>
+                                    <Form.Group controlId="ano_fabricacion">
                                         <Form.Label>
-                                            <strong>Ano fabricacion</strong>
+                                            <strong>Año fabricación</strong>
                                         </Form.Label>
                                         <Form.Control
-                                            type="ano_fabricacion"
+                                            type="number"
                                             placeholder="Ingrese el año de fabricación del vehículo"
+                                            name="ano_fabricacion"
+                                            value={input.ano_fabricacion}
+                                            onChange={changeHandler}
+                                            isInvalid={!!errors.ano_fabricacion}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.ano_fabricacion}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group controlId="tipo_motor" value={input.tipo_motor} onChange={changeTipoMotorHandler}>
+                                    <Form.Group controlId="tipo_motor">
                                         <Form.Label>
                                             <strong>Tipo Motor</strong>
                                         </Form.Label>
-                                        <Form.Control as="select" name="tipo_motor">
+                                        <Form.Control
+                                            as="select"
+                                            name="tipo_motor"
+                                            value={input.tipo_motor}
+                                            onChange={changeHandler}
+                                            isInvalid={!!errors.tipo_motor}
+                                        >
+                                            <option value="">Seleccione el tipo de motor</option>
                                             <option value="Gasolina">Gasolina</option>
                                             <option value="Diesel">Diesel</option>
                                             <option value="Hibrido">Hibrido</option>
                                             <option value="Electrico">Electrico</option>
                                         </Form.Control>
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.tipo_motor}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group controlId="num_asientos" value={input.num_asientos} onChange={changeNumAsientosHandler}>
+                                    <Form.Group controlId="num_asientos">
                                         <Form.Label>
-                                            <strong>Num asientos</strong>
+                                            <strong>Número de asientos</strong>
                                         </Form.Label>
                                         <Form.Control
-                                            type="num_asientos"
+                                            type="number"
                                             placeholder="Ingrese el número de asientos del vehículo"
+                                            name="num_asientos"
+                                            value={input.num_asientos}
+                                            onChange={changeHandler}
+                                            isInvalid={!!errors.num_asientos}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.num_asientos}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group controlId="kilometraje" value={input.kilometraje} onChange={changeKilometrajeHandler}>
+                                    <Form.Group controlId="kilometraje">
                                         <Form.Label>
                                             <strong>Kilometraje</strong>
                                         </Form.Label>
                                         <Form.Control
-                                            type="kilometraje"
+                                            type="number"
                                             placeholder="Ingrese el kilometraje del vehículo"
+                                            name="kilometraje"
+                                            value={input.kilometraje}
+                                            onChange={changeHandler}
+                                            isInvalid={!!errors.kilometraje}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.kilometraje}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
+                                    <Button
+                                        className="btn-3"
+                                        onClick={ingresarVehiculo}
+                                    >
+                                        Registrar Vehiculo
+                                    </Button>
                                 </Form>
                             </div>
-                            <Button className="btn-3" onClick={ingresarVehiculo}>Registrar Vehiculo</Button>
                         </div>
                     </div>
                 </div>

@@ -10,8 +10,11 @@ function HomeComponent() {
             <NavbarComponent />
             <HomeStyle>
                 <div align="center">
-                    <a className="btn" href="/listar">
+                    <a className="btn" href="/listar-vehiculos">
                         <button>Ver vehiculos</button>
+                    </a>
+                    <a className="btn" href="/listar-reparaciones">
+                        <button>Ver reparaciones</button>
                     </a>
                 </div>
             </HomeStyle>
