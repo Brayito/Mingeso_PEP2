@@ -16,6 +16,9 @@ function HomeComponent() {
                     <a className="btn" href="/listar-reparaciones">
                         <button>Ver reparaciones</button>
                     </a>
+                    <a className="btn" href="/historial">
+                        <button>Ver historiales</button>
+                    </a>
                 </div>
             </HomeStyle>
         </div>

@@ -63,7 +63,7 @@ export default function NewRepairComponent(props) {
                     fecha: input.fecha,
                     hora: input.hora,
                     patente: input.patente,
-                    value: 10
+                    value: 0
                 };
 
                 console.log("Reparación a enviar:", reparacion); // Debug log
@@ -82,7 +82,6 @@ export default function NewRepairComponent(props) {
         });
     };
 
-
     return (
         <div>
             <GlobalStyle />
@@ -100,7 +99,6 @@ export default function NewRepairComponent(props) {
                                             <strong>Tipo de Reparación</strong>
                                         </Form.Label>
                                         <Form.Select
-                                            type="text"
                                             name="type"
                                             value={input.type}
                                             onChange={changeHandler}
@@ -185,7 +183,6 @@ export default function NewRepairComponent(props) {
         </div>
     );
 }
-
 
 const Styles = styled.div``;
 

@@ -6,6 +6,11 @@ class RepairService {
         return axios.get("http://localhost:8080/reparation/repairs/");
     }
 
+
+    obtenerReparacionesPorVehiculo(patente) {
+        return axios.get("http://localhost:8080/reparation/repairsByVehicle/" + patente);
+    }
+
     ingresarReparacion(type, fecha, hora, patente) {
         return axios.post("http://localhost:8080/reparation/repairs/", type, fecha, hora, patente)
             .catch(error => {

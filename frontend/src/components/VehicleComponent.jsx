@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import NavbarComponent2 from "./NavbarComponent2";
 import { useNavigate } from "react-router-dom";
@@ -7,16 +7,13 @@ const VehicleComponent = () => {
     const navigate = useNavigate();
     const [vehicles, setVehicles] = React.useState([]);
 
-    React.useEffect(() => {
+    const fetchVehicles = () => {
         fetch("http://localhost:8080/reparation/vehicles/")
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("Network response was not ok " + res.statusText);
                 }
-                return res.text();
-            })
-            .then((text) => {
-                return text ? JSON.parse(text) : [];
+                return res.json();
             })
             .then((data) => {
                 setVehicles(data);
@@ -25,11 +22,59 @@ const VehicleComponent = () => {
                 console.log("Error al obtener vehículos:", error);
                 setVehicles([]);
             });
+    };
+
+    React.useEffect(() => {
+        fetchVehicles();
     }, []);
 
+    const updateVehicleState = (patente, estado) => {
+        console.log(`Actualizando estado del vehículo con patente ${patente} a ${estado}`);
+        fetch(`http://localhost:8080/reparation/actualizar/${patente}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ estado: estado }),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Network response was not ok " + res.statusText);
+                }
+                return res.json();
+            })
+            .then((data) => {
+                console.log('Respuesta del servidor:', data);
+                fetchVehicles(); // Recargar la tabla después de la actualización
+            })
+            .catch((error) => {
+                console.error("Error al actualizar el estado del vehículo:", error);
+            });
+    };
 
     const handleAddRepair = (patente) => {
         navigate("/nueva-reparacion", { state: { patente: patente } });
+    };
+
+    const handleRepairs = (patente) => {
+        navigate(`/listar-reparaciones/${patente}`, { state: { patente: patente } });
+    };
+
+    const handleEndRepairs = (patente) => {
+        updateVehicleState(patente, "Listo para retirar");
+        window.location.reload();
+    };
+
+    const handleRetired = (patente) => {
+        updateVehicleState(patente, "Retirado");
+    };
+
+    const handleHistorial = (patente) => {
+        navigate(`/historial/${patente}`);
+    };
+
+    const handleNewRepair = (patente) => {
+        updateVehicleState(patente, "En reparacion");
     };
 
     return (
@@ -50,6 +95,7 @@ const VehicleComponent = () => {
                             <th>Motor</th>
                             <th>Asientos</th>
                             <th>Kilometraje</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -64,13 +110,55 @@ const VehicleComponent = () => {
                                 <td>{vehicle.tipo_motor}</td>
                                 <td>{vehicle.num_asientos}</td>
                                 <td>{vehicle.kilometraje}</td>
+                                <td>{vehicle.estado}</td>
                                 <td>
-                                    <button
-                                        onClick={() => handleAddRepair(vehicle.patente)}
-                                        className="btn btn-primary mx-1"
-                                    >
-                                        Añadir Reparación
-                                    </button>
+                                    {vehicle.estado === "En reparacion" && (
+                                        <>
+                                            <button
+                                                onClick={() => handleAddRepair(vehicle.patente)}
+                                                className="btn btn-primary mx-1"
+                                            >
+                                                Añadir Reparación
+                                            </button>
+                                            <button
+                                                onClick={() => handleRepairs(vehicle.patente)}
+                                                className="btn btn-primary mx-1"
+                                            >
+                                                Ver reparaciones
+                                            </button>
+                                            <button
+                                                onClick={() => handleEndRepairs(vehicle.patente)}
+                                                className="btn btn-primary mx-1"
+                                            >
+                                                Finalizar reparaciones
+                                            </button>
+                                        </>
+                                    )}
+                                    {vehicle.estado === "Listo para retirar" && (
+                                        <button
+                                            onClick={() => handleRetired(vehicle.patente)}
+                                            className="btn btn-primary mx-1"
+                                        >
+                                            Retirado
+                                        </button>
+                                    )}
+                                    {vehicle.estado === "Retirado" && (
+                                        <>
+                                        <button
+                                            onClick={() => handleHistorial(vehicle.patente)}
+                                            className="btn btn-primary mx-1"
+                                        >
+                                            Ver historial
+                                        </button>
+
+                                        <button
+                                        onClick={() => handleNewRepair(vehicle.patente)}
+                                    className="btn btn-primary mx-1"
+                                >
+                                    Realizar nuevo ingreso
+                                </button>
+                                        </>
+                                    )}
                                 </td>
                             </tr>
                         ))}
