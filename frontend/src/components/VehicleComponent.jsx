@@ -67,6 +67,7 @@ const VehicleComponent = () => {
 
     const handleRetired = (patente) => {
         updateVehicleState(patente, "Retirado");
+        window.location.reload();
     };
 
     const handleHistorial = (patente) => {
@@ -75,6 +76,7 @@ const VehicleComponent = () => {
 
     const handleNewRepair = (patente) => {
         updateVehicleState(patente, "En reparacion");
+        window.location.reload();
     };
 
     return (

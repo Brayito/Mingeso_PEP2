@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import swal from 'sweetalert';
 import { createGlobalStyle } from 'styled-components';
+import { format, parseISO } from 'date-fns';
 
 export default function NewRepairComponent(props) {
     const location = useLocation();
@@ -38,6 +39,10 @@ export default function NewRepairComponent(props) {
         setInput({ ...input, [name]: value });
     };
 
+    const formatTime = (time) => {
+        return time.length === 5 ? `${time}:00` : time;
+    };
+
     const ingresarReparacion = e => {
         e.preventDefault();
 
@@ -58,10 +63,11 @@ export default function NewRepairComponent(props) {
         }).then(respuesta => {
             if (respuesta) {
                 swal("Reparación ingresada correctamente!", { icon: "success", timer: "3000" });
+
                 let reparacion = {
                     type: input.type,
-                    fecha: input.fecha,
-                    hora: input.hora,
+                    fecha: format(parseISO(input.fecha), "yyyy-MM-dd"),
+                    hora: formatTime(input.hora),  // Asegúrate de que la hora esté en formato HH:mm:ss
                     patente: input.patente,
                     value: 0
                 };
@@ -126,7 +132,7 @@ export default function NewRepairComponent(props) {
                                             <strong>Fecha</strong>
                                         </Form.Label>
                                         <Form.Control
-                                            type="text"
+                                            type="date"
                                             name="fecha"
                                             value={input.fecha}
                                             onChange={changeHandler}
@@ -141,7 +147,7 @@ export default function NewRepairComponent(props) {
                                             <strong>Hora</strong>
                                         </Form.Label>
                                         <Form.Control
-                                            type="text"
+                                            type="time"
                                             name="hora"
                                             value={input.hora}
                                             onChange={changeHandler}
